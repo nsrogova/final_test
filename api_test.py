@@ -67,7 +67,7 @@ def test_create_user():
     assert created_user['username'] == new_user['username']
     assert created_user['email'] == new_user['email']
 
-def response():
+def test_response():
     body = {
         "name": "Alex",
         "userName": "Ron"
