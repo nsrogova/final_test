@@ -1,4 +1,5 @@
 import json
+from jsonpath_ng import parse
 
 import pytest
 import requests
@@ -76,10 +77,10 @@ def test_post_clients_proposals(auth):
 
     assert body["portfolio"]["liquidTools"][0]["temporalProposalToolId"] == second_product["temporalProposalToolId"]
 
-
-@pytest.mark.parametrize("proposalId", ["9af39efa-67a8-4043-b1a5-bf1888ec55f9"])
+@pytest.mark.test
+@pytest.mark.parametrize("proposalId", ["0739b029-86b8-4a75-a241-066789969495"])
 def test_proposals_id(auth, proposalId):
-    url = f"https://ef-pfp-test2.tusvc.bcs.ru/ef-pfp-ms-proposal/api/v1/proposals/{proposalId}"
+    url = f"https://ef-pfp-test1.tusvc.bcs.ru/ef-pfp-ms-proposal/api/v1/proposals/{proposalId}"
     response = requests.get(url, headers=auth)
     response.raise_for_status()
 
@@ -89,6 +90,9 @@ def test_proposals_id(auth, proposalId):
     assert jsonProposal['id'] == proposalId
     assert "Персональное финансовое предложение" in jsonProposal['name']
 
-    path = parse("$.portfolio.liquidTools[*].toolType")
+    path = parse("$.portfolio.liquidTools.[*].code")
 
-    tool_type = [match.value for match in path.find(jsonProposal)]
+    matches = [x.value for x in path.find(jsonProposal)]
+
+    print(path.find(jsonProposal))
+    print(matches)
